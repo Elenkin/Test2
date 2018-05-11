@@ -1,41 +1,24 @@
 # -*- coding: utf-8 -*-
-from selenium.webdriver.firefox.webdriver import WebDriver
-from selenium.webdriver.common.action_chains import ActionChains
-import time, unittest
 
-def is_alert_present(wd):
-    try:
-        wd.switch_to_alert().text
-        return True
-    except:
-        return False
+import pytest
+from application import Application
 
-class test_add_group(unittest.TestCase):
-    def setUp(self):
-        self.wd = WebDriver()
-        self.wd.implicitly_wait(60)
-    
-    def test_test_add_group(self):
+@pytest.fixture
+def app(request):
+    fixture = Application()
+    request.addfinalizer(fixture.destroy)
+    return fixture
+
+def test_add_group(app):
         success = True
-        wd = self.wd
-        wd.get("http://localhost/addressbook/")
-        wd.find_element_by_link_text("groups").click()
-        wd.find_element_by_name("new").click()
-        wd.find_element_by_name("group_name").click()
-        wd.find_element_by_name("group_name").clear()
-        wd.find_element_by_name("group_name").send_keys("Новая группа")
-        wd.find_element_by_name("group_header").click()
-        wd.find_element_by_name("group_header").clear()
-        wd.find_element_by_name("group_header").send_keys("ннн")
-        wd.find_element_by_name("group_footer").click()
-        wd.find_element_by_name("group_footer").clear()
-        wd.find_element_by_name("group_footer").send_keys("неуненен")
-        wd.find_element_by_name("submit").click()
-        wd.find_element_by_link_text("group page").click()
-        self.assertTrue(success)
-    
-    def tearDown(self):
-        self.wd.quit()
+        app.init_group_creation()
+        app.fill_group_firm(name="Новая группа777", footer="неуненен", headers="содержание")
+        app.submit_group_creation()
 
-if __name__ == '__main__':
-    unittest.main()
+def test_add_empty_group(app):
+        success = True
+        app.init_group_creation()
+        app.fill_group_firm(name="", footer="", headers="")
+        app.submit_group_creation()
+
+
