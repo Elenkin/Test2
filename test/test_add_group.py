@@ -11,14 +11,14 @@ def app(request):
 
 def test_add_group(app):
         success = True
-        app.init_group_creation()
-        app.fill_group_firm(name="Новая группа777", footer="неуненен", headers="содержание")
-        app.submit_group_creation()
+        app.group.init_group_creation()
+        app.group.fill_group_firm(name="Новая группа777", footer="неуненен", headers="содержание")
+        app.group.submit_group_creation()
 
 def test_add_empty_group(app):
         success = True
-        app.init_group_creation()
-        app.fill_group_firm(name="", footer="", headers="")
-        app.submit_group_creation()
+        app.group.init_group_creation()
+        app.group.fill_group_firm(name="", footer="", headers="")
+        app.group.submit_group_creation()
 
 
